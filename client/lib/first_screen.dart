@@ -7,6 +7,11 @@ import 'dart:io';
 class FirstScreen extends StatelessWidget {
   Socket socketino;
 
+    doneHandler(){
+  socketino.destroy();
+  exit(0);
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,6 +99,7 @@ class FirstScreen extends StatelessWidget {
               RaisedButton(
                 onPressed: () {
                   {
+                    
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) {
                         return ChatPage();

@@ -1,3 +1,4 @@
+import 'package:chatroom/first_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
 import 'dart:io';
@@ -36,12 +37,12 @@ class _ChatPageState extends State<ChatPage> {
 
   connect() {
     if (!connected)
-      Socket.connect('192.168.1.195', 3000).then((Socket sock) {
+      Socket.connect('192.168.43.203', 3000).then((Socket sock) {
         socketino = sock;
         print('mi sono connesso');
-        socketino.write(name);
         socketino.listen(
           dataHandler,
+          onDone: doneHandler,
         );
       });
   }
@@ -61,6 +62,38 @@ class _ChatPageState extends State<ChatPage> {
     mycontroller.clear();
   }
 
+  doneHandler() {
+    socketino.destroy();
+  }
+
+  popout() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Log out"),
+          content: new Text("Hai effettuato il log out"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return FirstScreen();
+                    },
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +101,21 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(
         title: Text('Chat with your friends'),
         backgroundColor: Colors.deepPurple,
+        actions: <Widget>[
+          FlatButton(
+            textColor: Colors.white,
+            onPressed: () {
+              if (connected) {
+                doneHandler();
+                print("mi sono sconesso");
+                popout();
+              } else
+                print("non sono connesso");
+            },
+            child: Text("Log out"),
+            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+          ),
+        ],
       ),
       body: Center(
         child: Column(

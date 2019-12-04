@@ -1,15 +1,12 @@
 import 'dart:io';
 
-// USE ALSO netcat 127.0.0.1 3000
-
-// global variables
-
 ServerSocket server;
 List<ChatClient> clients = [];
 List<String> names = [];
+var counter = 0;
 
 void main() {
-  ServerSocket.bind('192.168.1.195', 3000).then((ServerSocket socket) {
+  ServerSocket.bind('192.168.43.203', 3000).then((ServerSocket socket) {
     server = socket;
 
     server.listen((client) {
@@ -28,10 +25,12 @@ void handleConnection(Socket client) {
 
   client.write("Ciao! "
       "Ci sono ${clients.length} membri attivi.\n");
+  print("Si sono connessi ${clients.length}.");
 }
 
 void removeClient(ChatClient client) {
   clients.remove(client);
+  print("Si sono connessi ${clients.length}.");
 }
 
 void distributeMessage(ChatClient client, String message) {
