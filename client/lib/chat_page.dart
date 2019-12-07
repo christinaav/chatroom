@@ -72,6 +72,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   doneHandler() {
+    socketino.write('$name:vado via');
     socketino.destroy();
   }
 
@@ -108,6 +109,13 @@ class _ChatPageState extends State<ChatPage> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
+          CircleAvatar(
+            backgroundImage: NetworkImage(
+              imageUrl,
+            ),
+            radius: 10.0,
+            backgroundColor: Colors.transparent,
+          ),
           Bubble(
             shadowColor: Colors.black,
             style: styleMe,
@@ -141,13 +149,6 @@ class _ChatPageState extends State<ChatPage> {
               ],
             ),
           ),
-          CircleAvatar(
-            backgroundImage: NetworkImage(
-              imageUrl,
-            ),
-            radius: 10.0,
-            backgroundColor: Colors.transparent,
-          )
         ],
       );
     } else {

@@ -71,6 +71,7 @@ usersList(String message) {
   String temp = getUsername(message);
   if (names.contains(temp)) {
     print('il nome esiste gia');
+    if (message.contains(':vado via')) names.remove(temp);
   } else
     names.add(temp);
   print('\n\n\n\n\n');
