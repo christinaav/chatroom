@@ -3,10 +3,11 @@ import 'dart:io';
 ServerSocket server;
 List<ChatClient> clients = [];
 List<String> names = [];
+String username;
 var counter = 0;
 
 void main() {
-  ServerSocket.bind('192.168.43.203', 3000).then((ServerSocket socket) {
+  ServerSocket.bind('192.168.1.50', 3000).then((ServerSocket socket) {
     server = socket;
 
     server.listen((client) {
@@ -15,7 +16,7 @@ void main() {
   });
 }
 
-void handleConnection(Socket client) {
+handleConnection(Socket client) {
   print('Connection from '
       '${client.remoteAddress.address}:${client.remotePort}');
 
@@ -25,18 +26,55 @@ void handleConnection(Socket client) {
 
   client.write("Ciao! "
       "Ci sono ${clients.length} membri attivi.\n");
-  print("Si sono connessi ${clients.length}.");
+  for (String m in names) client.write(m);
+  // print("Si sono connessi ${clients.length}.");
 }
 
-void removeClient(ChatClient client) {
+removeClient(ChatClient client) {
   clients.remove(client);
   print("Si sono connessi ${clients.length}.");
 }
 
-void distributeMessage(ChatClient client, String message) {
+distributeMessage(ChatClient client, String message, List<String> names) {
   for (ChatClient c in clients) {
     c.write(message + "\n");
   }
+}
+
+String getUsername(String string) {
+  String temp = '';
+  for (int i = 0; i < string.length; i++) {
+    if (string[i] != ':') {
+      temp = temp + string[i];
+    }
+    if (string[i] == ':') {
+      break;
+    }
+  }
+  return temp;
+}
+
+String getMessage(String string) {
+  String temp = '';
+  for (int i = 0; i < string.length; i++) {
+    if (string[i] == ':') {
+      for (int j = i + 1; j < string.length; j++) {
+        temp = temp + string[j];
+      }
+      break;
+    }
+  }
+  return temp;
+}
+
+usersList(String message) {
+  String temp = getUsername(message);
+  if (names.contains(temp)) {
+    print('il nome esiste gia');
+  } else
+    names.add(temp);
+  print('\n\n\n\n\n');
+  for (String x in names) print(x);
 }
 
 class ChatClient {
@@ -53,7 +91,10 @@ class ChatClient {
   void messageHandler(data) {
     String message = String.fromCharCodes(data).trim();
     print(String.fromCharCodes(data).trim());
-    distributeMessage(this, message);
+    distributeMessage(this, message, names);
+    getMessage(message);
+    // getUsername(message);
+    usersList(message);
   }
 
   void errorHandler(error) {

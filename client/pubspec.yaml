@@ -27,7 +27,7 @@ dependencies:
   flutter_signin_button: ^1.0.0
   flutter_auth_buttons: ^0.5.0
   undraw: ^1.0.1
-  emoji_picker: ^0.0.2
+  emoji_picker:
   circular_profile_avatar: ^1.0.3
 
 dev_dependencies:

@@ -2,20 +2,13 @@ import 'package:chatroom/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart';
 import 'sign_in.dart';
-import 'dart:io';
 
 class FirstScreen extends StatelessWidget {
-  Socket socketino;
-
-    doneHandler(){
-  socketino.destroy();
-  exit(0);
-}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.deepPurple,
         title: Text(
           'Welcome',
@@ -99,11 +92,9 @@ class FirstScreen extends StatelessWidget {
               RaisedButton(
                 onPressed: () {
                   {
-                    
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) {
-                        return ChatPage();
-                      }),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChatPage()),
                     );
                   }
                 },
