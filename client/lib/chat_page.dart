@@ -42,9 +42,11 @@ class _ChatPageState extends State<ChatPage> {
 
   connect() {
     if (!connected)
-      Socket.connect('192.168.1.50', 3000).then((Socket sock) {
+      Socket.connect('192.168.43.203', 3000).then((Socket sock) {
         socketino = sock;
-        print('mi sono connesso');
+        // print('mi sono connesso');
+        socketino.write('$name:CONNECT');
+        // print('$name:CONNECT');
         socketino.listen(
           dataHandler,
           onDone: doneHandler,
@@ -55,7 +57,9 @@ class _ChatPageState extends State<ChatPage> {
   dataHandler(data) {
     print(String.fromCharCodes(data).trim());
     temp = String.fromCharCodes(data).trim();
-    getUsers(String.fromCharCodes(data).trim());
+    users.add(temp);
+    print('\n');
+    for (String x in users) print(x);
     setState(() {
       messages.add(temp);
     });
@@ -67,12 +71,11 @@ class _ChatPageState extends State<ChatPage> {
         socketino != null) {
       socketino.write('$name:$nonmes');
     }
-    print(temp);
     mycontroller.clear();
   }
 
   doneHandler() {
-    socketino.write('$name:vado via');
+    socketino.write('$name:DISCONNECT');
     socketino.destroy();
   }
 
@@ -82,10 +85,12 @@ class _ChatPageState extends State<ChatPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Log out"),
-          content: new Text("Hai effettuato il log out"),
+          title: new Text("Log out", textAlign: TextAlign.center),
+          content: new Text(
+            "Hai effettuato il log out.",
+            textAlign: TextAlign.center,
+          ),
           actions: <Widget>[
-            // usually buttons at the bottom of the dialog
             new FlatButton(
               child: new Text("Ok"),
               onPressed: () {
@@ -202,58 +207,49 @@ class _ChatPageState extends State<ChatPage> {
 
   String getUsername(String string) {
     // print('Sto filtrando un username: $string');
-    if (string[0] != '&') {
-      String temp = '';
-      for (int i = 0; i < string.length; i++) {
-        if (string[i] != ':') {
-          temp = temp + string[i];
-        }
-        if (string[i] == ':') {
-          // print(string[i]);
-          break;
-        }
+    String temp = '';
+    for (int i = 0; i < string.length; i++) {
+      if (string[i] != ':') {
+        temp = temp + string[i];
       }
-      return temp;
+      if (string[i] == ':') {
+        // print(string[i]);
+        break;
+      }
     }
+    return temp;
   }
 
   String getMessage(String string) {
     // print('Sto filtrando un messaggio: $string');
-    if (string[0] != '&') {
-      String temp = '';
-      for (int i = 0; i < string.length; i++) {
-        if (string[i] == ':') {
-          for (int j = i + 1; j < string.length; j++) {
-            temp = temp + string[j];
-            // print('Sto creando il messaggio');
-          }
-          break;
+    String temp = '';
+    for (int i = 0; i < string.length; i++) {
+      if (string[i] == ':') {
+        for (int j = i + 1; j < string.length; j++) {
+          temp = temp + string[j];
+          // print('Sto creando il messaggio');
         }
+        break;
       }
-      // print(temp);
-      return temp;
     }
+    // print(temp);
+    return temp;
   }
 
-  getUsers(String string) {
-    String temp = '';
-    if (string[0] == '&') {
-      for (int i = 1; i < string.length; i++) {
-        temp = temp + string[i];
-      }
-      print(temp);
-      if (!users.contains(temp)) users.add(temp);
-    }
+  listUsers() {
+    for (String t in users) return Text(t);
   }
 
   showUsers() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return AlertDialog(
-          title: new Text("Utenti connessi"),
-          content: new Text(''),
+          title: new Text(
+            'I tuoi amici',
+            textAlign: TextAlign.center,
+          ),
+          content: listUsers(),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
@@ -277,30 +273,21 @@ class _ChatPageState extends State<ChatPage> {
         backgroundColor: Colors.deepPurple,
         title: Text('Chat with your friends'),
         actions: <Widget>[
-          PopupMenuButton<int>(
-              itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: FlatButton(
-                        child: Text(
-                          'Online',
-                        ),
-                        onPressed: null,
-                      ),
-                    ),
-                    PopupMenuItem(
-                      child: FlatButton(
-                        child: Text('Log out'),
-                        onPressed: () {
-                          if (connected) {
-                            doneHandler();
-                            print("mi sono sconesso");
-                            popout();
-                          } else
-                            print("non sono connesso");
-                        },
-                      ),
-                    )
-                  ])
+          FlatButton(
+            child: Text(
+              'Log out',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+            ),
+            onPressed: () {
+              if (connected) {
+                doneHandler();
+                print("mi sono sconesso");
+                popout();
+              } else
+                print("non sono connesso");
+            },
+          ),
         ],
       ),
       body: Center(
@@ -369,8 +356,11 @@ class _ChatPageState extends State<ChatPage> {
                                 onTap: () {
                                   connect();
                                   connected = true;
-                                  textfield = 'Type a message';
                                   sendData();
+                                  if (textfield != 'Type a message')
+                                    showUsers();
+                                  textfield = 'Type a message';
+
                                   _scrollController.animateTo(
                                     _scrollController.position.maxScrollExtent *
                                         2,

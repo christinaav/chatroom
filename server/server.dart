@@ -7,7 +7,7 @@ String username;
 var counter = 0;
 
 void main() {
-  ServerSocket.bind('192.168.1.50', 3000).then((ServerSocket socket) {
+  ServerSocket.bind('192.168.43.203', 3000).then((ServerSocket socket) {
     server = socket;
 
     server.listen((client) {
@@ -25,9 +25,8 @@ handleConnection(Socket client) {
   }
 
   client.write("Ciao! "
-      "Ci sono ${clients.length} membri attivi.\n");
-  for (String m in names) client.write(m);
-  // print("Si sono connessi ${clients.length}.");
+      "Ci sono ${clients.length - 1} membri attivi.\n");
+  for (String m in names) client.write('$m\n');
 }
 
 removeClient(ChatClient client) {
@@ -69,11 +68,13 @@ String getMessage(String string) {
 
 usersList(String message) {
   String temp = getUsername(message);
-  if (names.contains(temp)) {
-    print('il nome esiste gia');
-    if (message.contains(':vado via')) names.remove(temp);
-  } else
-    names.add(temp);
+  if (message.contains(':CONNECT')) {
+    if (names.contains(temp))
+      print('nome esiste già');
+    else
+      names.add(temp);
+  }
+  if (message.contains(':DISCONNECT')) names.remove(temp);
   print('\n\n\n\n\n');
   for (String x in names) print(x);
 }
@@ -92,10 +93,12 @@ class ChatClient {
   void messageHandler(data) {
     String message = String.fromCharCodes(data).trim();
     print(String.fromCharCodes(data).trim());
-    distributeMessage(this, message, names);
+    if (!message.contains(':CONNECT') && !message.contains(':DISCONNECT'))
+      distributeMessage(this, message, names);
+    else
+      usersList(message);
+    getUsername(message);
     getMessage(message);
-    // getUsername(message);
-    usersList(message);
   }
 
   void errorHandler(error) {
