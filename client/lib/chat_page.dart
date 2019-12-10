@@ -124,45 +124,47 @@ class _ChatPageState extends State<ChatPage> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
+          Expanded(
+            child: Bubble(
+              shadowColor: Colors.black,
+              style: styleMe,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      getUsername(message.toString()),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.green[700],
+                          fontWeight: FontWeight.w900,
+                          fontStyle: FontStyle.normal,
+                          fontSize: 15),
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      getMessage(message.toString()),
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                          color: Colors.green[800],
+                          fontWeight: FontWeight.w300,
+                          fontStyle: FontStyle.normal,
+                          fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           CircleAvatar(
             backgroundImage: NetworkImage(
               imageUrl,
             ),
             radius: 10.0,
             backgroundColor: Colors.transparent,
-          ),
-          Bubble(
-            shadowColor: Colors.black,
-            style: styleMe,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    getUsername(message.toString()),
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.green[800],
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.normal,
-                        fontSize: 15),
-                  ),
-                ),
-                SizedBox(height: 5),
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    getMessage(message.toString()),
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                        color: Colors.green[800],
-                        fontWeight: FontWeight.w300,
-                        fontStyle: FontStyle.normal,
-                        fontSize: 15),
-                  ),
-                ),
-              ],
-            ),
           ),
         ],
       );
@@ -170,46 +172,48 @@ class _ChatPageState extends State<ChatPage> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Bubble(
-            shadowColor: Colors.black,
-            style: styleSomebody,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    getUsername(message.toString()),
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.green[800],
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.normal,
-                        fontSize: 15),
-                  ),
-                ),
-                SizedBox(height: 5),
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    getMessage(message.toString()),
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                        color: Colors.green[800],
-                        fontWeight: FontWeight.w300,
-                        fontStyle: FontStyle.normal,
-                        fontSize: 15),
-                  ),
-                ),
-              ],
-            ),
-          ),
           CircleAvatar(
             backgroundImage: NetworkImage(
               imageUrl,
             ),
             radius: 10.0,
             backgroundColor: Colors.transparent,
-          )
+          ),
+          Expanded(
+            child: Bubble(
+              shadowColor: Colors.black,
+              style: styleSomebody,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      getUsername(message.toString()),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w900,
+                          fontStyle: FontStyle.normal,
+                          fontSize: 15),
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      getMessage(message.toString()),
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          fontWeight: FontWeight.w300,
+                          fontStyle: FontStyle.normal,
+                          fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       );
     }
@@ -312,11 +316,12 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ],
       ),
-      body: Center(
+      body: Container(
         child: Column(
           children: <Widget>[
             Container(
               height: MediaQuery.of(context).size.height / 1.3,
+              //  width: MediaQuery.of(context).size.width * 2,
               child: ListView(
                 controller: _scrollController,
                 scrollDirection: Axis.vertical,
