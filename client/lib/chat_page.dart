@@ -46,7 +46,7 @@ class _ChatPageState extends State<ChatPage> {
 
   connect() {
     if (!connected)
-      Socket.connect('192.168.1.50', 3000).then((Socket sock) {
+      Socket.connect('192.168.43.203', 3000).then((Socket sock) {
         socketino = sock;
         // print('mi sono connesso');
         socketino.write('$name:CONNECT');
@@ -293,6 +293,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -316,12 +317,11 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ],
       ),
-      body: Container(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Container(
-              height: MediaQuery.of(context).size.height / 1.3,
-              //  width: MediaQuery.of(context).size.width * 2,
+              height: MediaQuery.of(context).size.height / 1.27,
               child: ListView(
                 controller: _scrollController,
                 scrollDirection: Axis.vertical,

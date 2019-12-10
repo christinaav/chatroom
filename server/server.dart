@@ -7,7 +7,7 @@ String username;
 var counter = 0;
 
 void main() {
-  ServerSocket.bind('192.168.1.50', 3000).then((ServerSocket socket) {
+  ServerSocket.bind('192.168.43.203', 3000).then((ServerSocket socket) {
     server = socket;
 
     server.listen((client) {
