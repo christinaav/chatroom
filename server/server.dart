@@ -7,7 +7,7 @@ String username;
 var counter = 0;
 
 void main() {
-  ServerSocket.bind('192.168.43.203', 3000).then((ServerSocket socket) {
+  ServerSocket.bind('192.168.1.50', 3000).then((ServerSocket socket) {
     server = socket;
 
     server.listen((client) {
@@ -24,7 +24,7 @@ handleConnection(Socket client) {
     clients.add(ChatClient(client));
   }
 
-  client.write("Ciao! "
+  client.write("Ciao!\n"
       "Ci sono ${clients.length - 1} membri attivi.\n");
   for (String m in names) client.write('$m\n');
 }

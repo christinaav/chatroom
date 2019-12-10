@@ -1,6 +1,10 @@
+import 'dart:core' as prefix0;
+import 'dart:core';
+
 import 'package:chatroom/first_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
+import 'package:undraw/undraw.dart';
 import 'dart:io';
 import 'sign_in.dart';
 import 'first_screen.dart';
@@ -42,7 +46,7 @@ class _ChatPageState extends State<ChatPage> {
 
   connect() {
     if (!connected)
-      Socket.connect('192.168.43.203', 3000).then((Socket sock) {
+      Socket.connect('192.168.1.50', 3000).then((Socket sock) {
         socketino = sock;
         // print('mi sono connesso');
         socketino.write('$name:CONNECT');
@@ -86,13 +90,19 @@ class _ChatPageState extends State<ChatPage> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Log out", textAlign: TextAlign.center),
-          content: new Text(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0))),
+          contentPadding: EdgeInsets.only(top: 10.0),
+          content: Text(
             "Hai effettuato il log out.",
             textAlign: TextAlign.center,
           ),
           actions: <Widget>[
-            new FlatButton(
-              child: new Text("Ok"),
+            FlatButton(
+              child: new Text(
+                "Ok",
+                style: TextStyle(color: Colors.deepPurple),
+              ),
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -221,23 +231,32 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   String getMessage(String string) {
-    // print('Sto filtrando un messaggio: $string');
     String temp = '';
     for (int i = 0; i < string.length; i++) {
       if (string[i] == ':') {
         for (int j = i + 1; j < string.length; j++) {
           temp = temp + string[j];
-          // print('Sto creando il messaggio');
         }
         break;
       }
     }
-    // print(temp);
     return temp;
   }
 
   listUsers() {
-    for (String t in users) return Text(t);
+    print(users.length);
+    if (users.length == 0) {
+      print('nessuno on de line');
+      return Text(
+        "\nCiao!\nSei l'unico attivo. \nI tuoi amici sono offline.\n",
+        textAlign: TextAlign.center,
+      );
+    } else
+      for (String t in users)
+        return Text(
+          t,
+          textAlign: TextAlign.center,
+        );
   }
 
   showUsers() {
@@ -249,11 +268,14 @@ class _ChatPageState extends State<ChatPage> {
             'I tuoi amici',
             textAlign: TextAlign.center,
           ),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0))),
+          contentPadding: EdgeInsets.only(top: 10.0),
           content: listUsers(),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Ok"),
+              child: new Text("Ok", style: TextStyle(color: Colors.deepPurple)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
